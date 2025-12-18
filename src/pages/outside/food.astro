@@ -1,17 +1,51 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
-<BaseLayout title="Food · David Hu">
-  <a href="/outside">← Back</a>
-  <h1>Food</h1>
+
+<BaseLayout title="Food & Drinks · David Hu">
+  <a href="/outside/">← Back</a>
+
+  <h1>🍜 Food & Drinks</h1>
 
   <p>
-    (Paste your README “outside of work” hackathon paragraph here.)
+    <strong>HUGE foodie!</strong> Know a good place in your area? Message me.
+    I have a curated restaurant list
+    <!-- TODO: link Beli / spreadsheet when ready -->
+    for both the DC and Northern Virginia area that I’m confident will make
+    your stay exciting for any audience.
   </p>
 
-  <h2>Notes to future me</h2>
-  <ul>
-    <li>Drop stories as they happen.</li>
-    <li>Link projects or photos when you want.</li>
-  </ul>
+  <p>
+    I also like to cook at home and in college.
+    Favorite dishes to make include:
+    Red Braised Pork (红烧肉),
+    Black Bean Paste Noodles (炸酱面),
+    and steak (medium rare; from the grill with mashed potatoes and asparagus —
+    every guy needs to know).
+  </p>
+
+  <p>
+    I’ve cooked for large groups before, like fraternity alumni events —
+    but don’t ask me to do it again haha.
+  </p>
+
+  <p>
+    Beverage of choice: Whiskey sour —
+    although I won’t say no to piña coladas on the beach.
+  </p>
+
+  <h2>Dishes</h2>
+  <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin:18px 0;">
+    <img src="/readme_images/red_braised_pork.jpeg" alt="Red Braised Pork" height="200" width="200" loading="lazy" />
+    <img src="/readme_images/black_bean_paste_noodles.webp" alt="Black Bean Paste Noodles" height="200" width="200" loading="lazy" />
+    <img src="/readme_images/steak.jpg" alt="Medium Rare Steak" height="200" width="200" loading="lazy" />
+  </div>
+
+  <h2>Drinks</h2>
+  <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin:18px 0;">
+    <img src="/readme_images/whiskey_sour.jpg" alt="Whiskey Sour" height="200" width="200" loading="lazy" />
+    <img src="/readme_images/pina_colada.jpeg" alt="Piña Colada" height="200" width="200" loading="lazy" />
+  </div>
+
+  <hr />
 </BaseLayout>
