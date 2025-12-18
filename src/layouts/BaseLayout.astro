@@ -1,0 +1,28 @@
+---
+const { title = "David Hu" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header style="border-bottom:1px solid rgba(255,255,255,0.12); padding:16px 0;">
+      <nav style="max-width:980px; margin:0 auto; padding:0 24px;">
+        <a href="/" style="margin-right:14px; text-decoration:none;"><strong>David Hu</strong></a>
+        <a href="/projects" style="margin-right:14px; text-decoration:none;">Projects</a>
+        <a href="/outside" style="margin-right:14px; text-decoration:none;">Outside of Work</a>
+      </nav>
+    </header>
+
+    <main style="max-width:980px; margin:0 auto; padding:24px;">
+      <slot />
+    </main>
+
+    <footer style="max-width:980px; margin:40px auto 0; padding:24px; opacity:0.8; font-size:14px;">
+      © {new Date().getFullYear()} David Hu · Built on GitHub Pages
+    </footer>
+  </body>
+</html>
