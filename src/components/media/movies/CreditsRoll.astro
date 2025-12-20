@@ -73,7 +73,10 @@ const { items = [] } = Astro.props;
         });
       }
 
-      var lines = document.querySelectorAll(".creditLine");
+      // IMPORTANT: scope to this component so we don't accidentally miss nodes
+      var root = roll ? roll.parentElement : document;
+      var lines = root.querySelectorAll(".creditLine");
+
       lines.forEach(function (btn) {
         btn.addEventListener("click", function () {
           var tid = btn.getAttribute("data-template");
@@ -82,7 +85,17 @@ const { items = [] } = Astro.props;
           var tpl = document.getElementById(tid);
           if (!tpl) return;
 
-          var html = tpl.innerHTML;
+          // template elements store DOM inside `.content`
+          var html = "";
+          if (tpl.tagName === "TEMPLATE") {
+            var frag = tpl.content.cloneNode(true);
+            var container = document.createElement("div");
+            container.appendChild(frag);
+            html = container.innerHTML;
+          } else {
+            html = tpl.innerHTML;
+          }
+
           if (window.__openModal) window.__openModal(html);
         });
       });
