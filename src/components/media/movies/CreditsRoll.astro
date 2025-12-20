@@ -77,7 +77,7 @@ const { items = [] } = Astro.props;
     document.querySelectorAll(".creditLine").forEach((btn) => {
       btn.addEventListener("click", () => {
         const html = btn.getAttribute("data-modal") || "<p>No details yet.</p>";
-        window.__openModal?.(html);
+        if (window.__openModal) window.__openModal(html);
       });
     });
   </script>
