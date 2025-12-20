@@ -1,14 +1,13 @@
 ---
 const { items = [] } = Astro.props;
-// items should be array of { id, title, year, rating, tags, ... , modalHtml }
 ---
 
 <div style="border:1px solid #ddd; border-radius:18px; padding: 14px;">
   <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom: 10px;">
     <div style="font-weight:600;">Cinematic Mode</div>
     <div style="display:flex; gap:8px;">
-      <button id="creditsPause">Pause</button>
-      <button id="creditsPlay" style="display:none;">Play</button>
+      <button type="button" id="creditsPause">Pause</button>
+      <button type="button" id="creditsPlay" style="display:none;">Play</button>
     </div>
   </div>
 
@@ -16,14 +15,11 @@ const { items = [] } = Astro.props;
     <div class="creditsRoll" id="creditsRoll">
       <div style="height: 140px;"></div>
 
-      <div style="text-align:center; margin: 14px 0;">
-        <div style="font-size: 12px; letter-spacing:.2em; text-transform:uppercase; opacity:.7;">Favorite of all time</div>
-      </div>
-
       {items.map((m) => (
         <button
+          type="button"
           class="creditLine"
-          data-modal={m.modalHtml}
+          data-template={m.templateId}
           style="display:block; width:100%; background:transparent; border:0; color:inherit; padding:10px 0; cursor:pointer; text-align:center;"
         >
           <span style="font-weight:600;">{m.title}</span>
@@ -57,28 +53,39 @@ const { items = [] } = Astro.props;
     .creditLine:hover { opacity: .85; }
   </style>
 
-  <script>
-    const roll = document.getElementById("creditsRoll");
-    const pause = document.getElementById("creditsPause");
-    const play = document.getElementById("creditsPlay");
+  <script is:inline>
+    (function () {
+      var roll = document.getElementById("creditsRoll");
+      var pause = document.getElementById("creditsPause");
+      var play = document.getElementById("creditsPlay");
 
-    pause?.addEventListener("click", () => {
-      roll.style.animationPlayState = "paused";
-      pause.style.display = "none";
-      play.style.display = "inline-block";
-    });
+      if (pause && roll && play) {
+        pause.addEventListener("click", function () {
+          roll.style.animationPlayState = "paused";
+          pause.style.display = "none";
+          play.style.display = "inline-block";
+        });
 
-    play?.addEventListener("click", () => {
-      roll.style.animationPlayState = "running";
-      play.style.display = "none";
-      pause.style.display = "inline-block";
-    });
+        play.addEventListener("click", function () {
+          roll.style.animationPlayState = "running";
+          play.style.display = "none";
+          pause.style.display = "inline-block";
+        });
+      }
 
-    document.querySelectorAll(".creditLine").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const html = btn.getAttribute("data-modal") || "<p>No details yet.</p>";
-        if (window.__openModal) window.__openModal(html);
+      var lines = document.querySelectorAll(".creditLine");
+      lines.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var tid = btn.getAttribute("data-template");
+          if (!tid) return;
+
+          var tpl = document.getElementById(tid);
+          if (!tpl) return;
+
+          var html = tpl.innerHTML;
+          if (window.__openModal) window.__openModal(html);
+        });
       });
-    });
+    })();
   </script>
 </div>

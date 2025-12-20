@@ -2,29 +2,31 @@
 import MediaLayout from "../../../../layouts/MediaLayout.astro";
 import CreditsRoll from "../../../../components/media/movies/CreditsRoll.astro";
 import Modal from "../../../../components/ui/Modal.astro";
-import MovieDetail from "../../../../components/media/movies/MovieDetail.astro";
 
 import { getCollection } from "astro:content";
 import { render } from "astro:content";
 
 const movies = await getCollection("movies");
+
+// Render markdown bodies to HTML (supported in static builds)
+const rendered = await Promise.all(
+  movies.map(async (m) => {
+    const { Content } = await render(m);
+    return { entry: m, Content };
+  })
+);
+
+// credits roll only needs lightweight info + template id
+const items = rendered.map(({ entry }) => ({
+  id: entry.slug, // stable identifier
+  title: entry.data.title,
+  year: entry.data.year,
+  rating: entry.data.rating,
+  templateId: `movie-${entry.slug}`,
+}));
+
+// Featured fallback (optional)
 const featured = movies.find((m) => m.data.featured) ?? movies[0];
-
-const items = [];
-for (const m of movies) {
-  const { Content } = await render(m);
-  // Render MovieDetail to HTML string so we can inject into modal quickly
-  const modalHtml = await Astro.renderToString(MovieDetail, {
-    props: { movie: m.data, html: await Astro.renderToString(Content) },
-  });
-
-  items.push({
-    title: m.data.title,
-    year: m.data.year,
-    rating: m.data.rating,
-    modalHtml,
-  });
-}
 ---
 
 <MediaLayout title="Movies · David Hu">
@@ -35,10 +37,58 @@ for (const m of movies) {
 
   <CreditsRoll items={items} />
 
-  <div style="margin-top: 14px; opacity:.85;">
-    <p style="margin:0;">
-      (Later) Toggle: Cinematic Mode ↔ Library Mode · Link Letterboxd
-    </p>
+  <!-- Hidden templates the modal will pull from -->
+  <div style="display:none;">
+    {rendered.map(({ entry, Content }) => (
+      <template id={`movie-${entry.slug}`}>
+        <div style="display:grid; grid-template-columns: 160px 1fr; gap: 14px; align-items:start;">
+          {entry.data.poster ? (
+            <img
+              src={entry.data.poster}
+              alt={`${entry.data.title} poster`}
+              width="160"
+              height="240"
+              style="border-radius:12px; object-fit:cover;"
+              loading="lazy"
+            />
+          ) : (
+            <div style="width:160px; height:240px; border-radius:12px; background:#eee;"></div>
+          )}
+
+          <div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:baseline;">
+              <h3 style="margin:0;">{entry.data.title}</h3>
+              {entry.data.year ? <span style="opacity:.7;">({entry.data.year})</span> : null}
+              {entry.data.rating ? <span style="opacity:.9;">· {entry.data.rating}/10</span> : null}
+            </div>
+
+            {entry.data.director ? (
+              <p style="margin:6px 0 10px; opacity:.8;">Director: {entry.data.director}</p>
+            ) : null}
+
+            {entry.data.tags?.length ? (
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin: 0 0 10px;">
+                {entry.data.tags.map((t) => (
+                  <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">
+                    {t}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+
+            <div style="line-height:1.5;">
+              <Content />
+            </div>
+
+            {entry.data.link ? (
+              <p style="margin-top:12px;">
+                <a href={entry.data.link} target="_blank" rel="noreferrer">External link</a>
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </template>
+    ))}
   </div>
 
   <Modal id="movieModal" title="Movie" />
