@@ -1,0 +1,37 @@
+---
+const { items = [] } = Astro.props;
+---
+
+<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 16px;">
+  {items.map((it) => (
+    <div style="border:1px solid #ddd; border-radius:16px; padding:12px;">
+      {it.poster ? (
+        <img
+          src={it.poster}
+          alt={it.title}
+          width="320"
+          height="420"
+          style="width:100%; height:auto; border-radius:12px; object-fit:cover;"
+          loading="lazy"
+        />
+      ) : (
+        <div style="width:100%; aspect-ratio: 3/4; background:#eee; border-radius:12px;"></div>
+      )}
+
+      <div style="margin-top:10px;">
+        <div style="font-weight:600;">{it.title}</div>
+        {it.subtitle ? <div style="opacity:.75; font-size: 14px;">{it.subtitle}</div> : null}
+
+        {it.tags?.length ? (
+          <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+            {it.tags.slice(0, 4).map((t) => (
+              <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">
+                {t}
+              </span>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  ))}
+</div>

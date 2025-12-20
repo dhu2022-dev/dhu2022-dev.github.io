@@ -1,0 +1,24 @@
+---
+import MediaLayout from "../../../../layouts/MediaLayout.astro";
+import PosterGrid from "../../../../components/media/PosterGrid.astro";
+
+import { getCollection } from "astro:content";
+
+const books = await getCollection("books");
+---
+
+<MediaLayout title="Books · David Hu">
+  <h1 style="margin:0 0 8px;">Books</h1>
+  <p style="margin-top:0;">Covers + short notes. (Goodreads link later.)</p>
+
+  {books.length === 0 ? (
+    <p>No books yet — add markdown files under <code>src/content/books</code>.</p>
+  ) : (
+    <PosterGrid items={books.map(b => ({
+      title: b.data.title,
+      poster: b.data.poster,
+      subtitle: b.data.author ?? "",
+      tags: b.data.tags ?? [],
+    }))} />
+  )}
+</MediaLayout>

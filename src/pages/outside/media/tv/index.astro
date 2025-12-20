@@ -1,0 +1,24 @@
+---
+import MediaLayout from "../../../../layouts/MediaLayout.astro";
+import PosterGrid from "../../../../components/media/PosterGrid.astro";
+
+import { getCollection } from "astro:content";
+
+const tv = await getCollection("tv");
+---
+
+<MediaLayout title="TV · David Hu">
+  <h1 style="margin:0 0 8px;">TV</h1>
+  <p style="margin-top:0;">Shows, anime, and later: performances.</p>
+
+  {tv.length === 0 ? (
+    <p>No entries yet — add markdown files under <code>src/content/tv</code>.</p>
+  ) : (
+    <PosterGrid items={tv.map(s => ({
+      title: s.data.title,
+      poster: s.data.poster,
+      subtitle: s.data.category ?? "",
+      tags: s.data.tags ?? [],
+    }))} />
+  )}
+</MediaLayout>
