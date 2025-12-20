@@ -80,12 +80,22 @@ const { items = [] } = Astro.props;
       lines.forEach(function (btn) {
         btn.addEventListener("click", function () {
           var tid = btn.getAttribute("data-template");
-          if (!tid) return;
+          console.log("[CreditsRoll] clicked:", tid);
+
+          if (!tid) {
+            console.warn("[CreditsRoll] missing data-template on button");
+            return;
+          }
 
           var tpl = document.getElementById(tid);
-          if (!tpl) return;
+          if (!tpl) {
+            console.warn("[CreditsRoll] template not found:", tid);
+            // TEMP: prove modal works at all
+            if (window.__openModal) window.__openModal("<p>Template not found: <code>" + tid + "</code></p>");
+            else alert("Template not found and __openModal is undefined. Check Modal.astro.");
+            return;
+          }
 
-          // template elements store DOM inside `.content`
           var html = "";
           if (tpl.tagName === "TEMPLATE") {
             var frag = tpl.content.cloneNode(true);
@@ -96,7 +106,12 @@ const { items = [] } = Astro.props;
             html = tpl.innerHTML;
           }
 
-          if (window.__openModal) window.__openModal(html);
+          if (window.__openModal) {
+            window.__openModal(html);
+          } else {
+            console.warn("[CreditsRoll] window.__openModal is undefined");
+            alert("__openModal is undefined — Modal.astro script didn't run.");
+          }
         });
       });
     })();

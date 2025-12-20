@@ -18,11 +18,11 @@ const rendered = await Promise.all(
 
 // credits roll only needs lightweight info + template id
 const items = rendered.map(({ entry }) => ({
-  id: entry.slug, // stable identifier
+  id: entry.id,
   title: entry.data.title,
   year: entry.data.year,
   rating: entry.data.rating,
-  templateId: `movie-${entry.slug}`,
+  templateId: `movie-${entry.id}`,
 }));
 
 // Featured fallback (optional)
@@ -40,7 +40,7 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
   <!-- Hidden templates the modal will pull from -->
   <div style="display:none;">
     {rendered.map(({ entry, Content }) => (
-      <template id={`movie-${entry.slug}`}>
+      <template id={`movie-${entry.id}`}>
         <div style="display:grid; grid-template-columns: 160px 1fr; gap: 14px; align-items:start;">
           {entry.data.poster ? (
             <img

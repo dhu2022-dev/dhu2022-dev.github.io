@@ -1,14 +1,12 @@
 ---
-const { id = "modal", title = "Details" } = Astro.props;
+const { id = "movieModal", title = "Movie" } = Astro.props;
 ---
 
 <div id={id} style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); padding:24px; z-index:9999;">
   <div style="max-width: 780px; margin: 0 auto; background:#fff; border-radius:16px; padding:16px; position:relative;">
     <button type="button" data-close style="position:absolute; top:10px; right:10px;">✕</button>
     <h2 style="margin:0 0 10px;">{title}</h2>
-    <div data-body>
-      <slot />
-    </div>
+    <div data-body></div>
   </div>
 
   <script is:inline>
@@ -31,16 +29,9 @@ const { id = "modal", title = "Details" } = Astro.props;
       }
 
       if (closeBtn) closeBtn.addEventListener("click", close);
+      root.addEventListener("click", function (e) { if (e.target === root) close(); });
+      window.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
 
-      root.addEventListener("click", function (e) {
-        if (e.target === root) close();
-      });
-
-      window.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") close();
-      });
-
-      // Expose open method globally
       window.__openModal = openWithHtml;
       window.__closeModal = close;
     })();
