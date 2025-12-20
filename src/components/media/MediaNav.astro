@@ -1,0 +1,25 @@
+---
+const pathname = Astro.url.pathname;
+
+const tabs = [
+  { href: "/outside/media/", label: "Media" },
+  { href: "/outside/media/movies/", label: "Movies" },
+  { href: "/outside/media/tv/", label: "TV" },
+  { href: "/outside/media/books/", label: "Books" },
+];
+
+const isActive = (href) => (href === "/outside/media/" ? pathname === href : pathname.startsWith(href));
+---
+
+<nav style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;">
+  {tabs.map((t) => (
+    <a
+      href={t.href}
+      style={`padding:8px 10px; border-radius:999px; border:1px solid #ddd; text-decoration:none; ${
+        isActive(t.href) ? "background:#111; color:#fff; border-color:#111;" : "color:#111;"
+      }`}
+    >
+      {t.label}
+    </a>
+  ))}
+</nav>

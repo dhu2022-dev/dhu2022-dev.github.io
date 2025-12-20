@@ -1,0 +1,45 @@
+---
+import MediaLayout from "../../../../layouts/MediaLayout.astro";
+import CreditsRoll from "../../../../components/media/movies/CreditsRoll.astro";
+import Modal from "../../../../components/ui/Modal.astro";
+import MovieDetail from "../../../../components/media/movies/MovieDetail.astro";
+
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+
+const movies = await getCollection("movies");
+const featured = movies.find((m) => m.data.featured) ?? movies[0];
+
+const items = [];
+for (const m of movies) {
+  const { Content } = await render(m);
+  // Render MovieDetail to HTML string so we can inject into modal quickly
+  const modalHtml = await Astro.renderToString(MovieDetail, {
+    props: { movie: m.data, html: await Astro.renderToString(Content) },
+  });
+
+  items.push({
+    title: m.data.title,
+    year: m.data.year,
+    rating: m.data.rating,
+    modalHtml,
+  });
+}
+---
+
+<MediaLayout title="Movies · David Hu">
+  <h1 style="margin:0 0 8px;">Movies</h1>
+  <p style="margin-top:0;">
+    My favorite movie of all time is <strong>The Matrix</strong>, and I will die on that hill.
+  </p>
+
+  <CreditsRoll items={items} />
+
+  <div style="margin-top: 14px; opacity:.85;">
+    <p style="margin:0;">
+      (Later) Toggle: Cinematic Mode ↔ Library Mode · Link Letterboxd
+    </p>
+  </div>
+
+  <Modal id="movieModal" title="Movie" />
+</MediaLayout>

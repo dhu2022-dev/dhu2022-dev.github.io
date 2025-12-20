@@ -1,0 +1,39 @@
+---
+const { movie, html } = Astro.props;
+// movie = frontmatter-like data
+// html = rendered markdown body string
+---
+
+<div style="display:grid; grid-template-columns: 160px 1fr; gap: 14px; align-items:start;">
+  {movie.poster ? (
+    <img src={movie.poster} alt={`${movie.title} poster`} width="160" height="240" style="border-radius:12px; object-fit:cover;" loading="lazy" />
+  ) : (
+    <div style="width:160px; height:240px; border-radius:12px; background:#eee;"></div>
+  )}
+
+  <div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:baseline;">
+      <h3 style="margin:0;">{movie.title}</h3>
+      {movie.year ? <span style="opacity:.7;">({movie.year})</span> : null}
+      {movie.rating ? <span style="opacity:.9;">· {movie.rating}/10</span> : null}
+    </div>
+
+    {movie.director ? <p style="margin:6px 0 10px; opacity:.8;">Director: {movie.director}</p> : null}
+
+    {movie.tags?.length ? (
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin: 0 0 10px;">
+        {movie.tags.map((t) => (
+          <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">{t}</span>
+        ))}
+      </div>
+    ) : null}
+
+    <div set:html={html} style="line-height:1.5;"></div>
+
+    {movie.link ? (
+      <p style="margin-top:12px;">
+        <a href={movie.link} target="_blank" rel="noreferrer">External link</a>
+      </p>
+    ) : null}
+  </div>
+</div>

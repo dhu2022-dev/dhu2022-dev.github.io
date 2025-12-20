@@ -1,0 +1,17 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import MediaNav from "../components/media/MediaNav.astro";
+
+const { title } = Astro.props;
+---
+
+<BaseLayout title={title}>
+  <div style="max-width: 920px; margin: 0 auto; padding: 24px 16px;">
+    <a href="/outside/">← Back</a>
+    <MediaNav />
+
+    <main style="margin-top: 18px;">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
