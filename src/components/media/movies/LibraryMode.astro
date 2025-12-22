@@ -1,0 +1,117 @@
+---
+const { items = [] } = Astro.props;
+---
+
+<div id="libraryMode" style="display:none;">
+  <div class="libraryGrid">
+    {items.map((m) => (
+      <button
+        type="button"
+        class="libraryItem"
+        data-template={m.templateId}
+      >
+        {m.poster ? (
+          <img
+            src={m.poster}
+            alt={m.title}
+            width="200"
+            height="300"
+            style="width:100%; height:auto; aspect-ratio: 2/3; border-radius:12px; object-fit:cover; margin-bottom:10px;"
+            loading="lazy"
+          />
+        ) : (
+          <div class="posterPlaceholder"></div>
+        )}
+
+        <div style="font-weight:600; margin-bottom:4px;">{m.title}</div>
+        <div style="opacity:.7; font-size:14px;">
+          {m.year ? <span>{m.year}</span> : null}
+          {m.year && m.rating ? <span> · </span> : null}
+          {m.rating ? <span>{m.rating}/10</span> : null}
+        </div>
+      </button>
+    ))}
+  </div>
+
+  <style>
+    .libraryGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .libraryItem {
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 12px;
+      background: #fff;
+      color: #111;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .libraryItem:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .posterPlaceholder {
+      width: 100%;
+      aspect-ratio: 2/3;
+      background: #eee;
+      border-radius: 12px;
+      margin-bottom: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      .libraryItem {
+        border-color: #444;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .libraryItem:hover {
+        box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+      }
+      .posterPlaceholder {
+        background: #333;
+      }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var items = document.querySelectorAll(".libraryItem");
+      items.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var tid = btn.getAttribute("data-template");
+          if (!tid) {
+            console.warn("[LibraryMode] missing data-template on button");
+            return;
+          }
+
+          var tpl = document.getElementById(tid);
+          if (!tpl) {
+            console.warn("[LibraryMode] template not found:", tid);
+            if (window.__openModal) window.__openModal("<p>Template not found: <code>" + tid + "</code></p>");
+            return;
+          }
+
+          var html = "";
+          if (tpl.tagName === "TEMPLATE") {
+            var frag = tpl.content.cloneNode(true);
+            var container = document.createElement("div");
+            container.appendChild(frag);
+            html = container.innerHTML;
+          } else {
+            html = tpl.innerHTML;
+          }
+
+          if (window.__openModal) {
+            window.__openModal(html);
+          } else {
+            console.warn("[LibraryMode] window.__openModal is undefined");
+          }
+        });
+      });
+    })();
+  </script>
+</div>
+

@@ -7,7 +7,7 @@ const { title } = Astro.props;
 
 <BaseLayout title={title}>
   <div style="max-width: 920px; margin: 0 auto; padding: 24px 16px;">
-    <a href="/outside/">← Back</a>
+    <a href="/outside/" class="backLink">← Back</a>
     <MediaNav />
 
     <main style="margin-top: 18px;">
@@ -15,3 +15,18 @@ const { title } = Astro.props;
     </main>
   </div>
 </BaseLayout>
+
+<style>
+  .backLink {
+    color: #111;
+    text-decoration: none;
+  }
+  .backLink:hover {
+    text-decoration: underline;
+  }
+  @media (prefers-color-scheme: dark) {
+    .backLink {
+      color: #fff;
+    }
+  }
+</style>

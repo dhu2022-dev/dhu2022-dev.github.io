@@ -2,12 +2,86 @@
 const { id = "movieModal", title = "Movie" } = Astro.props;
 ---
 
-<div id={id} style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); padding:24px; z-index:9999;">
-  <div style="max-width: 780px; margin: 0 auto; background:#fff; border-radius:16px; padding:16px; position:relative;">
-    <button type="button" data-close style="position:absolute; top:10px; right:10px;">✕</button>
-    <h2 style="margin:0 0 10px;">{title}</h2>
-    <div data-body></div>
+<div id={id} class="modalOverlay" style="display:none;">
+  <div class="modalContent">
+    <button type="button" class="modalClose" data-close>✕</button>
+    <h2 class="modalTitle">{title}</h2>
+    <div class="modalBody" data-body></div>
   </div>
+</div>
+
+<style>
+  .modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    padding: 24px;
+    z-index: 9999;
+  }
+  .modalContent {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #fff;
+    color: #111;
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+  }
+  .modalClose {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #111;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+  .modalTitle {
+    margin: 0 0 10px;
+    color: #111;
+  }
+  .modalBody {
+    color: #111;
+  }
+  .modalBody a {
+    color: #0066cc;
+  }
+  .modalBody a:hover {
+    text-decoration: underline;
+  }
+  @media (prefers-color-scheme: dark) {
+    .modalContent {
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .modalClose {
+      color: #fff;
+    }
+    .modalClose:hover {
+      opacity: 0.7;
+    }
+    .modalTitle {
+      color: #fff;
+    }
+    .modalBody {
+      color: #fff;
+    }
+    .modalBody a {
+      color: #66b3ff;
+    }
+    /* Fix tag borders in dark mode */
+    .modalBody span[style*="border:1px solid #ddd"] {
+      border-color: #444 !important;
+    }
+    /* Fix placeholder backgrounds in dark mode */
+    .modalBody div[style*="background:#eee"] {
+      background: #333 !important;
+    }
+  }
+</style>
 
   <script is:inline define:vars={{ modalId: id }}>
     (function () {

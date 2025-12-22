@@ -11,15 +11,60 @@ const tabs = [
 const isActive = (href) => (href === "/outside/media/" ? pathname === href : pathname.startsWith(href));
 ---
 
-<nav style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;">
+<nav class="mediaNav">
   {tabs.map((t) => (
     <a
       href={t.href}
-      style={`padding:8px 10px; border-radius:999px; border:1px solid #ddd; text-decoration:none; ${
-        isActive(t.href) ? "background:#111; color:#fff; border-color:#111;" : "color:#111;"
-      }`}
+      class={isActive(t.href) ? "navTab navTabActive" : "navTab"}
     >
       {t.label}
     </a>
   ))}
 </nav>
+
+<style>
+  .mediaNav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .navTab {
+    padding: 8px 10px;
+    border-radius: 999px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    background: #fff;
+    color: #111;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .navTab:hover {
+    background: #f5f5f5;
+  }
+  .navTabActive {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+  }
+  .navTabActive:hover {
+    background: #111;
+  }
+  @media (prefers-color-scheme: dark) {
+    .navTab {
+      border-color: #444;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .navTab:hover {
+      background: #2a2a2a;
+    }
+    .navTabActive {
+      background: #fff;
+      color: #111;
+      border-color: #fff;
+    }
+    .navTabActive:hover {
+      background: #fff;
+    }
+  }
+</style>

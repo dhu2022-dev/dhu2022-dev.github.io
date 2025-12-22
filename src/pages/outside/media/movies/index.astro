@@ -1,6 +1,7 @@
 ---
 import MediaLayout from "../../../../layouts/MediaLayout.astro";
 import CreditsRoll from "../../../../components/media/movies/CreditsRoll.astro";
+import LibraryMode from "../../../../components/media/movies/LibraryMode.astro";
 import Modal from "../../../../components/ui/Modal.astro";
 
 import { getCollection } from "astro:content";
@@ -23,6 +24,7 @@ const items = rendered.map(({ entry }) => ({
   title: entry.data.title,
   year: entry.data.year,
   rating: entry.data.rating,
+  poster: entry.data.poster,
   templateId: `movie-${entry.id}`,
 }));
 
@@ -36,7 +38,59 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
     My favorite movie of all time is <strong>The Matrix</strong>, and I will die on that hill.
   </p>
 
-  <CreditsRoll items={items} />
+  <div class="modeToggleContainer">
+    <div class="modeLabel" id="modeLabel">Cinematic Mode</div>
+    <button type="button" class="modeToggle" id="modeToggle">
+      Switch to Library Mode
+    </button>
+  </div>
+
+  <style>
+    .modeToggleContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 16px 0;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .modeLabel {
+      font-weight: 600;
+      color: #111;
+    }
+    .modeToggle {
+      padding: 8px 16px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .modeToggle:hover {
+      background: #f5f5f5;
+    }
+    @media (prefers-color-scheme: dark) {
+      .modeLabel {
+        color: #fff;
+      }
+      .modeToggle {
+        border-color: #444;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .modeToggle:hover {
+        background: #2a2a2a;
+      }
+    }
+  </style>
+
+  <div id="cinematicMode">
+    <CreditsRoll items={items} />
+  </div>
+
+  <LibraryMode items={items} />
 
   <!-- Hidden templates the modal will pull from -->
   <div style="display:none;">
@@ -91,4 +145,33 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
   </div>
 
   <Modal id="movieModal" title="Movie" />
+
+  <script is:inline>
+    (function () {
+      var cinematicMode = document.getElementById("cinematicMode");
+      var libraryMode = document.getElementById("libraryMode");
+      var modeToggle = document.getElementById("modeToggle");
+      var modeLabel = document.getElementById("modeLabel");
+
+      if (!cinematicMode || !libraryMode || !modeToggle || !modeLabel) return;
+
+      modeToggle.addEventListener("click", function () {
+        var isCinematic = cinematicMode.style.display !== "none";
+        
+        if (isCinematic) {
+          // Switch to Library Mode
+          cinematicMode.style.display = "none";
+          libraryMode.style.display = "block";
+          modeLabel.textContent = "Library Mode";
+          modeToggle.textContent = "Switch to Cinematic Mode";
+        } else {
+          // Switch to Cinematic Mode
+          cinematicMode.style.display = "block";
+          libraryMode.style.display = "none";
+          modeLabel.textContent = "Cinematic Mode";
+          modeToggle.textContent = "Switch to Library Mode";
+        }
+      });
+    })();
+  </script>
 </MediaLayout>
