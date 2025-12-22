@@ -20,10 +20,12 @@ const { movie, html } = Astro.props;
 
     {movie.director ? <p style="margin:6px 0 10px; opacity:.8;">Director: {movie.director}</p> : null}
 
-    {movie.tags?.length ? (
+    {movie.tags && movie.tags.length ? (
       <div style="display:flex; gap:6px; flex-wrap:wrap; margin: 0 0 10px;">
         {movie.tags.map((t) => (
-          <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">{t}</span>
+          <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">
+            {t}
+          </span>
         ))}
       </div>
     ) : null}

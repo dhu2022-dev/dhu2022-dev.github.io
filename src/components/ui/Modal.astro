@@ -11,8 +11,14 @@ const { id = "movieModal", title = "Movie" } = Astro.props;
 
   <script is:inline>
     (function () {
+      // If you see this log, the script executed.
+      console.log("[Modal] script loaded");
+
       var root = document.getElementById({JSON.stringify(id)});
-      if (!root) return;
+      if (!root) {
+        console.warn("[Modal] root not found:", {JSON.stringify(id)});
+        return;
+      }
 
       function close() {
         root.style.display = "none";
@@ -37,7 +43,6 @@ const { id = "movieModal", title = "Movie" } = Astro.props;
         if (e.key === "Escape") close();
       });
 
-      // Expose globally
       window.__openModal = openWithHtml;
       window.__closeModal = close;
     })();
