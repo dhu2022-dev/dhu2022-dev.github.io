@@ -11,8 +11,9 @@ const movies = await getCollection("movies");
 // Render markdown bodies to HTML (supported in static builds)
 const rendered = await Promise.all(
   movies.map(async (m) => {
-    const { Content } = await render(m);
-    return { entry: m, Content };
+    const { Content, body } = await render(m);
+    // Use the body string directly if available, otherwise we'll render Content
+    return { entry: m, Content, contentHtml: body || "" };
   })
 );
 
@@ -39,7 +40,7 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
 
   <!-- Hidden templates the modal will pull from -->
   <div style="display:none;">
-    {rendered.map(({ entry, Content }) => (
+    {rendered.map(({ entry, contentHtml }) => (
       <template id={`movie-${entry.id}`}>
         <div style="display:grid; grid-template-columns: 160px 1fr; gap: 14px; align-items:start;">
           {entry.data.poster ? (
@@ -76,9 +77,7 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
               </div>
             ) : null}
 
-            <div style="line-height:1.5;">
-              <Content />
-            </div>
+            <div set:html={contentHtml} style="line-height:1.5;"></div>
 
             {entry.data.link ? (
               <p style="margin-top:12px;">

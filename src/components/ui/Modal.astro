@@ -9,14 +9,11 @@ const { id = "movieModal", title = "Movie" } = Astro.props;
     <div data-body></div>
   </div>
 
-  <script is:inline>
+  <script is:inline define:vars={{ modalId: id }}>
     (function () {
-      // If you see this log, the script executed.
-      console.log("[Modal] script loaded");
-
-      var root = document.getElementById({JSON.stringify(id)});
+      var root = document.getElementById(modalId);
       if (!root) {
-        console.warn("[Modal] root not found:", {JSON.stringify(id)});
+        console.warn("[Modal] root not found:", modalId);
         return;
       }
 

@@ -80,8 +80,6 @@ const { items = [] } = Astro.props;
       lines.forEach(function (btn) {
         btn.addEventListener("click", function () {
           var tid = btn.getAttribute("data-template");
-          console.log("[CreditsRoll] clicked:", tid);
-
           if (!tid) {
             console.warn("[CreditsRoll] missing data-template on button");
             return;
@@ -90,7 +88,6 @@ const { items = [] } = Astro.props;
           var tpl = document.getElementById(tid);
           if (!tpl) {
             console.warn("[CreditsRoll] template not found:", tid);
-            // TEMP: prove modal works at all
             if (window.__openModal) window.__openModal("<p>Template not found: <code>" + tid + "</code></p>");
             else alert("Template not found and __openModal is undefined. Check Modal.astro.");
             return;
