@@ -2,10 +2,91 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout title="David Hu">
-  <h1>Hey — I’m David.</h1>
-  <p>This is my personal site. If you’re here for the “human” stuff:</p>
-  <p><a href="/outside/">→ Outside of Work</a></p>
+  <div class="homepage-hero">
+    <h1>Hey — I'm David.</h1>
+    <p class="hero-subtitle">This is my personal site.</p>
+  </div>
 
-  <p>If you’re here for projects:</p>
-  <p><a href="/projects/">→ Projects</a></p>
+  <div class="homepage-links">
+    <div class="link-card">
+      <h2><a href="/outside/">Outside of Work</a></h2>
+      <p>Movies, books, food, and life</p>
+    </div>
+    
+    <div class="link-card">
+      <h2><a href="/projects/">Projects</a></h2>
+      <p>Code, experiments, and work</p>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .homepage-hero {
+    margin-bottom: 4rem;
+  }
+  
+  .homepage-hero h1 {
+    margin-bottom: 1rem;
+  }
+  
+  .hero-subtitle {
+    font-size: var(--font-size-xl);
+    opacity: 0.8;
+    margin-bottom: 0;
+  }
+  
+  .homepage-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  
+  .link-card {
+    padding: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .link-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .link-card h2 {
+    margin-bottom: 0.5rem;
+    font-size: var(--font-size-2xl);
+  }
+  
+  .link-card h2 a {
+    color: inherit;
+  }
+  
+  .link-card p {
+    font-size: var(--font-size-base);
+    opacity: 0.7;
+    margin-bottom: 0;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .link-card {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .link-card:hover {
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .homepage-links {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .link-card {
+      padding: 1.5rem;
+    }
+  }
+</style>

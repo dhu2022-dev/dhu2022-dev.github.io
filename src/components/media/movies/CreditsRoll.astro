@@ -2,12 +2,12 @@
 const { items = [] } = Astro.props;
 ---
 
-<div style="border:1px solid #ddd; border-radius:18px; padding: 14px;">
-  <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom: 10px;">
-    <div style="font-weight:600;">Cinematic Mode</div>
-    <div style="display:flex; gap:8px;">
-      <button type="button" id="creditsPause">Pause</button>
-      <button type="button" id="creditsPlay" style="display:none;">Play</button>
+<div class="creditsContainer">
+  <div class="creditsHeader">
+    <div class="creditsTitle">Cinematic Mode</div>
+    <div class="creditsControls">
+      <button type="button" class="creditsButton" id="creditsPause">Pause</button>
+      <button type="button" class="creditsButton" id="creditsPlay" style="display:none;">Play</button>
     </div>
   </div>
 
@@ -20,11 +20,10 @@ const { items = [] } = Astro.props;
           type="button"
           class="creditLine"
           data-template={m.templateId}
-          style="display:block; width:100%; background:transparent; border:0; color:inherit; padding:10px 0; cursor:pointer; text-align:center;"
         >
-          <span style="font-weight:600;">{m.title}</span>
-          {m.year ? <span style="opacity:.7;"> · {m.year}</span> : null}
-          {m.rating ? <span style="opacity:.7;"> · {m.rating}/10</span> : null}
+          <span class="creditTitle">{m.title}</span>
+          {m.year ? <span class="creditMeta"> · {m.year}</span> : null}
+          {m.rating ? <span class="creditMeta"> · {m.rating}/10</span> : null}
         </button>
       ))}
 
@@ -33,6 +32,65 @@ const { items = [] } = Astro.props;
   </div>
 
   <style>
+    .creditsContainer {
+      border: 1px solid #ddd;
+      border-radius: 18px;
+      padding: 1rem;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .creditsContainer {
+        border-color: #444;
+      }
+    }
+    
+    .creditsHeader {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .creditsTitle {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+    }
+    
+    .creditsControls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .creditsButton {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      background: #fff;
+      color: #111;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    
+    .creditsButton:hover {
+      background: #f5f5f5;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .creditsButton {
+        border-color: #444;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      
+      .creditsButton:hover {
+        background: #2a2a2a;
+      }
+    }
+    
     .creditsViewport {
       height: 420px;
       overflow: hidden;
@@ -42,15 +100,42 @@ const { items = [] } = Astro.props;
       position: relative;
       border: 1px solid rgba(255,255,255,.12);
     }
+    
     .creditsRoll {
       animation: roll 30s linear infinite;
       will-change: transform;
     }
+    
     @keyframes roll {
       from { transform: translateY(0); }
       to { transform: translateY(-60%); }
     }
-    .creditLine:hover { opacity: .85; }
+    
+    .creditLine {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 0;
+      color: inherit;
+      padding: 0.75rem 0;
+      cursor: pointer;
+      text-align: center;
+      font-size: var(--font-size-base);
+      transition: opacity 0.2s;
+    }
+    
+    .creditLine:hover {
+      opacity: 0.85;
+    }
+    
+    .creditTitle {
+      font-weight: var(--font-weight-semibold);
+    }
+    
+    .creditMeta {
+      opacity: 0.7;
+      font-size: var(--font-size-sm);
+    }
   </style>
 
   <script is:inline>

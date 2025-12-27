@@ -33,10 +33,12 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
 ---
 
 <MediaLayout title="Movies · David Hu">
-  <h1 style="margin:0 0 8px;">Movies</h1>
-  <p style="margin-top:0;">
-    My favorite movie of all time is <strong>The Matrix</strong>, and I will die on that hill.
-  </p>
+  <div class="movies-header">
+    <h1>Movies</h1>
+    <p class="movies-intro">
+      My favorite movie of all time is <strong>The Matrix</strong>, and I will die on that hill.
+    </p>
+  </div>
 
   <div class="modeToggleContainer">
     <div class="modeLabel" id="modeLabel">Cinematic Mode</div>
@@ -46,40 +48,62 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
   </div>
 
   <style>
+    .movies-header {
+      margin-bottom: 2rem;
+    }
+    
+    .movies-header h1 {
+      margin-bottom: 0.75rem;
+    }
+    
+    .movies-intro {
+      font-size: var(--font-size-lg);
+      opacity: 0.8;
+      margin-bottom: 0;
+    }
+    
     .modeToggleContainer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 16px 0;
+      margin: 2rem 0;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 1rem;
     }
+    
     .modeLabel {
-      font-weight: 600;
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
       color: #111;
     }
+    
     .modeToggle {
-      padding: 8px 16px;
+      padding: 0.75rem 1.5rem;
       border: 1px solid #ddd;
       border-radius: 999px;
       background: #fff;
       color: #111;
       cursor: pointer;
-      font-size: 14px;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
       transition: background 0.2s, border-color 0.2s, color 0.2s;
     }
+    
     .modeToggle:hover {
       background: #f5f5f5;
     }
+    
     @media (prefers-color-scheme: dark) {
       .modeLabel {
         color: #fff;
       }
+      
       .modeToggle {
         border-color: #444;
         background: #1a1a1a;
         color: #fff;
       }
+      
       .modeToggle:hover {
         background: #2a2a2a;
       }
@@ -111,30 +135,28 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
           )}
 
           <div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:baseline;">
-              <h3 style="margin:0;">{entry.data.title}</h3>
-              {entry.data.year ? <span style="opacity:.7;">({entry.data.year})</span> : null}
-              {entry.data.rating ? <span style="opacity:.9;">· {entry.data.rating}/10</span> : null}
+            <div class="movieHeader">
+              <h3 class="movieTitle">{entry.data.title}</h3>
+              {entry.data.year ? <span class="movieMeta">({entry.data.year})</span> : null}
+              {entry.data.rating ? <span class="movieMeta">· {entry.data.rating}/10</span> : null}
             </div>
 
             {entry.data.director ? (
-              <p style="margin:6px 0 10px; opacity:.8;">Director: {entry.data.director}</p>
+              <p class="movieDirector">Director: {entry.data.director}</p>
             ) : null}
 
             {entry.data.tags && entry.data.tags.length ? (
-              <div style="display:flex; gap:6px; flex-wrap:wrap; margin: 0 0 10px;">
+              <div class="movieTags">
                 {entry.data.tags.map((t) => (
-                  <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">
-                    {t}
-                  </span>
+                  <span class="movieTag">{t}</span>
                 ))}
               </div>
             ) : null}
 
-            <div set:html={contentHtml} style="line-height:1.5;"></div>
+            <div class="movieContent" set:html={contentHtml}></div>
 
             {entry.data.link ? (
-              <p style="margin-top:12px;">
+              <p class="movieLink">
                 <a href={entry.data.link} target="_blank" rel="noreferrer">External link</a>
               </p>
             ) : null}
@@ -174,4 +196,62 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
       });
     })();
   </script>
+  
+  <style>
+    .movieHeader {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+    
+    .movieTitle {
+      margin: 0;
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+    }
+    
+    .movieMeta {
+      opacity: 0.7;
+      font-size: var(--font-size-base);
+    }
+    
+    .movieDirector {
+      margin: 0.5rem 0 0.75rem;
+      opacity: 0.8;
+      font-size: var(--font-size-base);
+    }
+    
+    .movieTags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0 0 1rem;
+    }
+    
+    .movieTag {
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      padding: 0.25rem 0.5rem;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-medium);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .movieTag {
+        border-color: #444;
+      }
+    }
+    
+    .movieContent {
+      line-height: var(--line-height-relaxed);
+      font-size: var(--font-size-base);
+    }
+    
+    .movieLink {
+      margin-top: 1rem;
+      font-size: var(--font-size-base);
+    }
+  </style>
 </MediaLayout>

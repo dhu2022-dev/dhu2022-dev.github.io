@@ -2,9 +2,9 @@
 const { items = [] } = Astro.props;
 ---
 
-<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 16px;">
+<div class="posterGrid">
   {items.map((it) => (
-    <div style="border:1px solid #ddd; border-radius:16px; padding:12px;">
+    <div class="posterCard">
       {it.poster ? (
         <img
           src={it.poster}
@@ -15,19 +15,17 @@ const { items = [] } = Astro.props;
           loading="lazy"
         />
       ) : (
-        <div style="width:100%; aspect-ratio: 3/4; background:#eee; border-radius:12px;"></div>
+        <div class="posterPlaceholder"></div>
       )}
 
-      <div style="margin-top:10px;">
-        <div style="font-weight:600;">{it.title}</div>
-        {it.subtitle ? <div style="opacity:.75; font-size: 14px;">{it.subtitle}</div> : null}
+      <div class="posterInfo">
+        <div class="posterTitle">{it.title}</div>
+        {it.subtitle ? <div class="posterSubtitle">{it.subtitle}</div> : null}
 
         {it.tags && it.tags.length ? (
-        <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;">
+        <div class="posterTags">
             {it.tags.slice(0, 4).map((t) => (
-            <span style="border:1px solid #ddd; border-radius:999px; padding:4px 8px; font-size:12px;">
-                {t}
-            </span>
+            <span class="posterTag">{t}</span>
             ))}
         </div>
         ) : null}
@@ -36,3 +34,74 @@ const { items = [] } = Astro.props;
     </div>
   ))}
 </div>
+
+<style>
+  .posterGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .posterCard {
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 0.75rem;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .posterCard {
+      border-color: #444;
+    }
+  }
+  
+  .posterInfo {
+    margin-top: 0.75rem;
+  }
+  
+  .posterTitle {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.25rem;
+  }
+  
+  .posterSubtitle {
+    font-size: var(--font-size-sm);
+    opacity: 0.75;
+    margin-bottom: 0.5rem;
+  }
+  
+  .posterTags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  
+  .posterTag {
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .posterTag {
+      border-color: #444;
+    }
+  }
+  
+  .posterPlaceholder {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: #eee;
+    border-radius: 12px;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .posterPlaceholder {
+      background: #333;
+    }
+  }
+</style>

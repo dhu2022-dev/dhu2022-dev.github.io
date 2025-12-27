@@ -3,9 +3,9 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 <BaseLayout title="Outside of Work · David Hu">
   <h1>Outside of Work</h1>
-  <p>Everything personal lives here so my GitHub README stays focused.</p>
+  <p class="page-intro">Everything personal lives here so my GitHub README stays focused.</p>
 
-  <ul>
+  <ul class="outside-links">
     <li><a href="/outside/hackathons">Hackathons & Friends</a></li>
     <li><a href="/outside/culture">Culture & Language</a></li>
     <li><a href="/outside/photography">Photography</a></li>
@@ -16,3 +16,79 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <li><a href="/outside/cat">Cat Pictures</a></li>
   </ul>
 </BaseLayout>
+
+<style>
+  .page-intro {
+    font-size: var(--font-size-lg);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+  
+  .outside-links {
+    list-style: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .outside-links li {
+    margin-bottom: 0;
+  }
+  
+  .outside-links a {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+    color: #111;
+    text-decoration: none;
+    background: #fff;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  
+  .outside-links a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.15);
+    background: #fafafa;
+  }
+  
+  .outside-links a:active {
+    transform: translateY(0);
+  }
+  
+  .outside-links a:visited,
+  .outside-links a:link {
+    color: #111;
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    .outside-links a {
+      border-color: rgba(255, 255, 255, 0.1);
+      background: #1a1a1a;
+      color: #fff;
+    }
+    
+    .outside-links a:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+      background: #252525;
+    }
+    
+    .outside-links a:visited,
+    .outside-links a:link {
+      color: #fff;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .outside-links {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

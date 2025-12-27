@@ -23,8 +23,8 @@ const { items = [] } = Astro.props;
           <div class="posterPlaceholder"></div>
         )}
 
-        <div style="font-weight:600; margin-bottom:4px;">{m.title}</div>
-        <div style="opacity:.7; font-size:14px;">
+        <div class="libraryTitle">{m.title}</div>
+        <div class="libraryMeta">
           {m.year ? <span>{m.year}</span> : null}
           {m.year && m.rating ? <span> · </span> : null}
           {m.rating ? <span>{m.rating}/10</span> : null}
@@ -43,16 +43,28 @@ const { items = [] } = Astro.props;
     .libraryItem {
       border: 1px solid #ddd;
       border-radius: 16px;
-      padding: 12px;
+      padding: 1rem;
       background: #fff;
       color: #111;
       cursor: pointer;
       text-align: left;
       transition: transform 0.2s, box-shadow 0.2s;
     }
+    
     .libraryItem:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .libraryTitle {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: 0.25rem;
+    }
+    
+    .libraryMeta {
+      font-size: var(--font-size-sm);
+      opacity: 0.7;
     }
     .posterPlaceholder {
       width: 100%;
