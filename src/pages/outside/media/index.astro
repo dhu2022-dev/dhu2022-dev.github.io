@@ -3,25 +3,23 @@ import MediaLayout from "../../../layouts/MediaLayout.astro";
 ---
 
 <MediaLayout title="Media · David Hu">
-  <h1 style="margin: 0 0 8px;">Favorite Media</h1>
-  <p style="margin-top: 0;">
-    A small library of things that stuck with me. Movies gets the “flagship” treatment.
-  </p>
+  <h1>Favorite Media</h1>
+  <p class="page-intro">A small library of things that stuck with me. Movies gets the "flagship" treatment.</p>
 
-  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 18px;">
-    <a href="/outside/media/movies/" style="border:1px solid #ddd; border-radius:16px; padding:14px; text-decoration:none; color:inherit;">
-      <h3 style="margin:0 0 6px;">🎬 Movies</h3>
-      <p style="margin:0; opacity:.85;">Cinematic mode + reviews.</p>
+  <div class="card-grid">
+    <a href="/outside/media/movies/" class="card">
+      <h2>Movies</h2>
+      <p>Cinematic mode + reviews.</p>
     </a>
 
-    <a href="/outside/media/tv/" style="border:1px solid #ddd; border-radius:16px; padding:14px; text-decoration:none; color:inherit;">
-      <h3 style="margin:0 0 6px;">📺 TV</h3>
-      <p style="margin:0; opacity:.85;">Shows, anime, and later: performances.</p>
+    <a href="/outside/media/tv/" class="card">
+      <h2>TV</h2>
+      <p>Shows, anime, and later: performances.</p>
     </a>
 
-    <a href="/outside/media/books/" style="border:1px solid #ddd; border-radius:16px; padding:14px; text-decoration:none; color:inherit;">
-      <h3 style="margin:0 0 6px;">📚 Books</h3>
-      <p style="margin:0; opacity:.85;">Covers + notes.</p>
+    <a href="/outside/media/books/" class="card">
+      <h2>Books</h2>
+      <p>Covers + notes.</p>
     </a>
   </div>
 </MediaLayout>

@@ -7,86 +7,31 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <p class="hero-subtitle">This is my personal site.</p>
   </div>
 
-  <div class="homepage-links">
-    <div class="link-card">
-      <h2><a href="/outside/">Outside of Work</a></h2>
+  <div class="card-grid">
+    <a href="/outside/" class="card">
+      <h2>Outside of Work</h2>
       <p>Movies, books, food, and life</p>
-    </div>
+    </a>
     
-    <div class="link-card">
-      <h2><a href="/projects/">Projects</a></h2>
+    <a href="/projects/" class="card">
+      <h2>Projects</h2>
       <p>Code, experiments, and work</p>
-    </div>
+    </a>
   </div>
 </BaseLayout>
 
 <style>
   .homepage-hero {
-    margin-bottom: 4rem;
+    margin-bottom: var(--spacing-3xl);
   }
   
   .homepage-hero h1 {
-    margin-bottom: 1rem;
+    margin-bottom: var(--spacing-md);
   }
   
   .hero-subtitle {
     font-size: var(--font-size-xl);
     opacity: 0.8;
     margin-bottom: 0;
-  }
-  
-  .homepage-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-  }
-  
-  .link-card {
-    padding: 2rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  
-  .link-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .link-card h2 {
-    margin-bottom: 0.5rem;
-    font-size: var(--font-size-2xl);
-  }
-  
-  .link-card h2 a {
-    color: inherit;
-  }
-  
-  .link-card p {
-    font-size: var(--font-size-base);
-    opacity: 0.7;
-    margin-bottom: 0;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    .link-card {
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .link-card:hover {
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .homepage-links {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-    
-    .link-card {
-      padding: 1.5rem;
-    }
   }
 </style>
