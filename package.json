@@ -6,9 +6,16 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:letterboxd": "tsx scripts/sync-letterboxd.ts",
+    "prebuild": "npm run sync:letterboxd"
   },
   "dependencies": {
     "astro": "^5.16.6"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "fast-xml-parser": "^4.3.5",
+    "gray-matter": "^4.0.3"
   }
 }
