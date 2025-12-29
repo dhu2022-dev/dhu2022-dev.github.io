@@ -14,6 +14,7 @@ const movies = defineCollection({
   type: "content",
   schema: baseMediaSchema.extend({
     director: z.string().optional(),
+    letterboxdId: z.string().optional(), // Letterboxd slug for syncing ratings
   }),
 });
 
