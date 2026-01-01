@@ -113,7 +113,12 @@ function createMovieFile(letterboxdMovie: LetterboxdMovie): void {
     link: letterboxdMovie.letterboxdUrl,
   };
   
-  const content = matter.stringify('', frontmatter, {
+  // Add poster if available
+  if (letterboxdMovie.poster) {
+    frontmatter.poster = letterboxdMovie.poster;
+  }
+  
+  const content = matter.stringify(letterboxdMovie.review || '', frontmatter, {
     delimiters: '---',
   });
   
@@ -143,12 +148,27 @@ function updateMovieFile(
     frontmatter.link = letterboxdMovie.letterboxdUrl;
   }
   
+  // Update poster if available (Letterboxd wins)
+  if (letterboxdMovie.poster) {
+    frontmatter.poster = letterboxdMovie.poster;
+  }
+  
+  // Update review content if available (Letterboxd wins, but only if content is empty or placeholder)
+  let updatedContent = content;
+  if (letterboxdMovie.review) {
+    // Only update if content is empty, very short, or is a placeholder like "Test"
+    const trimmedContent = content.trim().toLowerCase();
+    if (!trimmedContent || trimmedContent.length < 10 || trimmedContent === 'test') {
+      updatedContent = letterboxdMovie.review.trim();
+    }
+  }
+  
   // Write back to file
-  const updatedContent = matter.stringify(content, frontmatter, {
+  const finalContent = matter.stringify(updatedContent, frontmatter, {
     delimiters: '---',
   });
   
-  writeFileSync(filePath, updatedContent, 'utf-8');
+  writeFileSync(filePath, finalContent, 'utf-8');
 }
 
 /**
@@ -180,6 +200,8 @@ async function syncLetterboxd(): Promise<void> {
         const { movie } = match;
         const hadLetterboxdId = !!movie.frontmatter.letterboxdId;
         const ratingChanged = movie.frontmatter.rating !== letterboxdMovie.rating;
+        const posterAdded = letterboxdMovie.poster && !movie.frontmatter.poster;
+        const reviewUpdated = letterboxdMovie.review && (!movie.content.trim() || movie.content.trim().toLowerCase() === 'test');
         
         updateMovieFile(match.movie.path, movie.frontmatter, movie.content, letterboxdMovie);
         
@@ -191,6 +213,14 @@ async function syncLetterboxd(): Promise<void> {
         if (ratingChanged) {
           updated++;
           console.log(`  ⭐ Updated rating for: ${movie.frontmatter.title} (${movie.frontmatter.rating} → ${letterboxdMovie.rating})`);
+        }
+        
+        if (posterAdded) {
+          console.log(`  🎬 Added poster for: ${movie.frontmatter.title}`);
+        }
+        
+        if (reviewUpdated) {
+          console.log(`  📝 Updated review for: ${movie.frontmatter.title}`);
         }
       } else {
         // Auto-create new movie file from Letterboxd

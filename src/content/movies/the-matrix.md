@@ -1,12 +1,16 @@
 ---
-director: 'The Wachowskis'
+director: The Wachowskis
 featured: true
-letterboxdId: 'the-matrix'
+letterboxdId: the-matrix
 link: 'https://letterboxd.com/woogles/film/the-matrix/'
-poster: 'https://a.ltrbxd.com/resized/film-poster/5/1/5/1/8/51518-the-matrix-0-600-0-900-crop.jpg?v=fc7c366afe'
+poster: >-
+  https://a.ltrbxd.com/resized/film-poster/5/1/5/1/8/51518-the-matrix-0-600-0-900-crop.jpg?v=fc7c366afe
 rating: 10
-tags: ["mind-bending", "action", "philosophy"]
-title: 'The Matrix'
+tags:
+  - mind-bending
+  - action
+  - philosophy
+title: The Matrix
 year: 1999
 ---
 

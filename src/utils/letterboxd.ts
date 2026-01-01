@@ -10,6 +10,8 @@ export interface LetterboxdMovie {
   letterboxdId: string; // Slug from URL (e.g., "the-matrix-1999")
   letterboxdUrl: string;
   watchedDate: string | null;
+  poster?: string; // Poster image URL
+  review?: string; // Review text (markdown/plain text)
 }
 
 /**
@@ -53,6 +55,65 @@ function convertRating(letterboxdRating: string | null): number | null {
 }
 
 /**
+ * Extracts poster URL from RSS description HTML or constructs it from film slug
+ */
+function extractPosterUrl(description: string, letterboxdId: string): string | undefined {
+  if (!description) return undefined;
+  
+  // Try to find poster image in description HTML
+  const imgMatch = description.match(/<img[^>]+src="([^"]+)"/i);
+  if (imgMatch) {
+    const imgUrl = imgMatch[1];
+    // Letterboxd uses CDN URLs like: https://a.ltrbxd.com/resized/film-poster/...
+    if (imgUrl.includes("ltrbxd.com") || imgUrl.includes("letterboxd.com")) {
+      return imgUrl;
+    }
+  }
+  
+  // Fallback: construct poster URL from film slug
+  // Letterboxd poster URLs follow pattern: https://a.ltrbxd.com/resized/film-poster/{width}/{film-slug}-0-{height}-0-crop.jpg
+  // We'll use a standard size (500x750 for 2:3 aspect ratio)
+  if (letterboxdId) {
+    return `https://a.ltrbxd.com/resized/film-poster/5/0/0/${letterboxdId}-0-750-0-crop.jpg`;
+  }
+  
+  return undefined;
+}
+
+/**
+ * Extracts review text from description HTML
+ * Removes HTML tags but preserves basic formatting
+ */
+function extractReviewText(description: string): string | undefined {
+  if (!description) return undefined;
+  
+  // Remove poster image if present
+  let text = description.replace(/<img[^>]*>/gi, "");
+  
+  // Remove HTML tags but preserve line breaks
+  text = text
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<p[^>]*>/gi, "")
+    .replace(/<\/?[^>]+>/g, "")
+    .trim();
+  
+  // Decode HTML entities
+  text = text
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+  
+  // Clean up multiple newlines
+  text = text.replace(/\n{3,}/g, "\n\n");
+  
+  return text.length > 0 ? text : undefined;
+}
+
+/**
  * Parses Letterboxd RSS XML and extracts movie data
  */
 export async function parseLetterboxdRSS(xml: string): Promise<LetterboxdMovie[]> {
@@ -80,6 +141,7 @@ export async function parseLetterboxdRSS(xml: string): Promise<LetterboxdMovie[]
     const memberRating = item['letterboxd:memberRating']?.['#text'] || item['letterboxd:memberRating'];
     const link = item.link?.['#text'] || item.link || '';
     const pubDate = item.pubDate?.['#text'] || item.pubDate || null;
+    const description = item.description?.['#text'] || item.description || item['content:encoded']?.['#text'] || item['content:encoded'] || '';
     
     // Fallback to title parsing if namespaced fields aren't available
     const title = filmTitle || (item.title?.['#text'] || item.title || '');
@@ -111,6 +173,10 @@ export async function parseLetterboxdRSS(xml: string): Promise<LetterboxdMovie[]
       .trim();
     
     if (cleanTitle && letterboxdId && rating !== null) {
+      // Extract poster and review from description
+      const poster = letterboxdId ? extractPosterUrl(description, letterboxdId) : undefined;
+      const review = extractReviewText(description);
+      
       movies.push({
         title: cleanTitle,
         year,
@@ -118,6 +184,8 @@ export async function parseLetterboxdRSS(xml: string): Promise<LetterboxdMovie[]
         letterboxdId,
         letterboxdUrl: link,
         watchedDate: pubDate,
+        poster,
+        review,
       });
     }
   }
