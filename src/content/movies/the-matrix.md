@@ -1,18 +1,13 @@
 ---
-title: The Matrix
-year: 1999
-poster: /readme_images/the_matrix_poster.jpeg
-rating: 10
-tags:
-  - mind-bending
-  - action
-  - philosophy
-link: 'https://www.imdb.com/title/tt0133093/'
+director: 'The Wachowskis'
 featured: true
-director: The Wachowskis
-letterboxdId: the-matrix
+letterboxdId: 'the-matrix'
+link: 'https://letterboxd.com/woogles/film/the-matrix/'
+poster: 'https://a.ltrbxd.com/resized/film-poster/5/1/5/1/8/51518-the-matrix-0-600-0-900-crop.jpg?v=fc7c366afe'
+rating: 10
+tags: ["mind-bending", "action", "philosophy"]
+title: 'The Matrix'
+year: 1999
 ---
 
-My favorite movie of all time. I will die on this hill.
-
-What I love: the worldbuilding, the ideas, and the *commitment* to style.
+This movie fundamentally changed how I view the world. Be prepared for a mind boggling set of events that shake your perception of reality — literally. Neo is fcking badass with his character development that seems somehow relatable while also detached. Also trinity is what every CS major aspires to be. Epic fight scenes, deep dialogue of the world, and relatable growth that rivets the audience.

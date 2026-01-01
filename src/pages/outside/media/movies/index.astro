@@ -6,6 +6,7 @@ import Modal from "../../../../components/ui/Modal.astro";
 
 import { getCollection } from "astro:content";
 import { render } from "astro:content";
+import { marked } from "marked";
 
 const movies = await getCollection("movies");
 
@@ -13,8 +14,10 @@ const movies = await getCollection("movies");
 const rendered = await Promise.all(
   movies.map(async (m) => {
     const { Content, body } = await render(m);
-    // Use the body string directly if available, otherwise we'll render Content
-    return { entry: m, Content, contentHtml: body || "" };
+    // Render markdown body to HTML if it exists
+    // The body from render() might be raw markdown, so we'll render it with marked
+    const contentHtml = body ? marked.parse(body.trim()) : "";
+    return { entry: m, Content, contentHtml };
   })
 );
 
