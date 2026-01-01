@@ -54,11 +54,14 @@ const { id = "movieModal", title = "Movie" } = Astro.props;
     font-size: var(--font-size-base);
     line-height: var(--line-height-relaxed);
   }
-  .modalBody a {
-    color: #0066cc;
-  }
-  .modalBody a:hover {
+  .modalBody a:not(.movieExternalLink) {
+    color: var(--color-text);
     text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    transition: text-decoration-color var(--transition-base);
+  }
+  .modalBody a:not(.movieExternalLink):hover {
+    text-decoration-color: var(--color-text);
   }
   @media (prefers-color-scheme: dark) {
     .modalContent {
@@ -77,8 +80,12 @@ const { id = "movieModal", title = "Movie" } = Astro.props;
     .modalBody {
       color: #fff;
     }
-    .modalBody a {
-      color: #66b3ff;
+    .modalBody a:not(.movieExternalLink) {
+      color: var(--color-text);
+      text-decoration-color: var(--color-border);
+    }
+    .modalBody a:not(.movieExternalLink):hover {
+      text-decoration-color: var(--color-text);
     }
     /* Fix tag borders in dark mode */
     .modalBody span[style*="border:1px solid #ddd"] {

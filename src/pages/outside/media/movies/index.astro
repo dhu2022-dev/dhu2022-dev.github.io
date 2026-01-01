@@ -7,19 +7,48 @@ import Modal from "../../../../components/ui/Modal.astro";
 import { getCollection } from "astro:content";
 import { render } from "astro:content";
 import { marked } from "marked";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 const movies = await getCollection("movies");
 
-// Render markdown bodies to HTML (supported in static builds)
+// Render markdown bodies to HTML
+// Read markdown files directly since render() doesn't always return body content
 const rendered = await Promise.all(
   movies.map(async (m) => {
     const { Content, body } = await render(m);
-    // Render markdown body to HTML if it exists
-    // The body from render() might be raw markdown, so we'll render it with marked
-    const contentHtml = body ? marked.parse(body.trim()) : "";
+    
+    // Try to get body from render(), fallback to reading file directly
+    let trimmedBody = body ? body.trim() : "";
+    
+    if (!trimmedBody) {
+      try {
+        const filePath = join(process.cwd(), "src/content/movies", m.id);
+        const fileContent = readFileSync(filePath, "utf-8");
+        // Extract body content (everything after the frontmatter)
+        const frontmatterEnd = fileContent.indexOf("---", 3);
+        if (frontmatterEnd !== -1) {
+          trimmedBody = fileContent.substring(frontmatterEnd + 3).trim();
+        }
+      } catch (e) {
+        // File read failed, body stays empty
+      }
+    }
+    
+    // Convert markdown to HTML
+    const contentHtml = trimmedBody ? marked.parse(trimmedBody) : "";
+    
     return { entry: m, Content, contentHtml };
   })
 );
+
+// Store review content in a global object for JavaScript access
+const reviewContentMap: Record<string, string> = {};
+rendered.forEach(({ entry, contentHtml }) => {
+  if (contentHtml) {
+    reviewContentMap[entry.id] = contentHtml;
+  }
+});
 
 // credits roll only needs lightweight info + template id
 const items = rendered.map(({ entry }) => ({
@@ -122,7 +151,7 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
   <!-- Hidden templates the modal will pull from -->
   <div style="display:none;">
     {rendered.map(({ entry, contentHtml }) => (
-      <template id={`movie-${entry.id}`}>
+      <div id={`movie-${entry.id}`} style="display:none;">
         <div style="display:grid; grid-template-columns: 160px 1fr; gap: 14px; align-items:start;">
           {entry.data.poster ? (
             <img
@@ -156,20 +185,25 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
               </div>
             ) : null}
 
-            <div class="movieContent" set:html={contentHtml}></div>
+            <div class="movieContent" data-movie-id={entry.id}></div>
 
             {entry.data.link ? (
               <p class="movieLink">
-                <a href={entry.data.link} target="_blank" rel="noreferrer">External link</a>
+                <a href={entry.data.link} target="_blank" rel="noreferrer" class="movieExternalLink">External link</a>
               </p>
             ) : null}
           </div>
         </div>
-      </template>
+      </div>
     ))}
   </div>
 
   <Modal id="movieModal" title="Movie" />
+
+  <script define:vars={{ reviewMap: reviewContentMap }}>
+    // Make review content available globally for modal population
+    window.__movieReviews = reviewMap || {};
+  </script>
 
   <script is:inline>
     (function () {
@@ -250,11 +284,46 @@ const featured = movies.find((m) => m.data.featured) ?? movies[0];
     .movieContent {
       line-height: var(--line-height-relaxed);
       font-size: var(--font-size-base);
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .movieContent:empty {
+      display: none;
     }
     
     .movieLink {
       margin-top: 1rem;
       font-size: var(--font-size-base);
+    }
+    
+    .movieExternalLink {
+      display: inline-block;
+      padding: var(--spacing-xs) var(--spacing-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: background var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+    }
+    
+    .movieExternalLink:hover {
+      background: #f5f5f5;
+      border-color: var(--color-border-hover);
+      transform: translateY(-1px);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .movieExternalLink {
+        border-color: #444;
+      }
+      
+      .movieExternalLink:hover {
+        background: #2a2a2a;
+        border-color: #555;
+      }
     }
   </style>
 </MediaLayout>

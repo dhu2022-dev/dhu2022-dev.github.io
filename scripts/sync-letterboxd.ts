@@ -153,14 +153,11 @@ function updateMovieFile(
     frontmatter.poster = letterboxdMovie.poster;
   }
   
-  // Update review content if available (Letterboxd wins, but only if content is empty or placeholder)
+  // Update review content if available (Letterboxd is the source of truth)
   let updatedContent = content;
   if (letterboxdMovie.review) {
-    // Only update if content is empty, very short, or is a placeholder like "Test"
-    const trimmedContent = content.trim().toLowerCase();
-    if (!trimmedContent || trimmedContent.length < 10 || trimmedContent === 'test') {
-      updatedContent = letterboxdMovie.review.trim();
-    }
+    // Always update from Letterboxd - it's the single source of truth
+    updatedContent = letterboxdMovie.review.trim();
   }
   
   // Write back to file

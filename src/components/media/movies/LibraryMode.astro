@@ -66,6 +66,7 @@ const { items = [] } = Astro.props;
       font-size: var(--font-size-sm);
       opacity: 0.7;
     }
+    
     .posterPlaceholder {
       width: 100%;
       aspect-ratio: 2/3;
@@ -107,14 +108,20 @@ const { items = [] } = Astro.props;
           }
 
           var html = "";
-          if (tpl.tagName === "TEMPLATE") {
-            var frag = tpl.content.cloneNode(true);
-            var container = document.createElement("div");
-            container.appendChild(frag);
-            html = container.innerHTML;
-          } else {
-            html = tpl.innerHTML;
-          }
+          // Clone the div to get a fresh copy with all content
+          var clone = tpl.cloneNode(true);
+          clone.style.display = "block"; // Make sure it's visible when cloned
+          
+          // Populate review content from global review map
+          var contentDivs = clone.querySelectorAll(".movieContent[data-movie-id]");
+          contentDivs.forEach(function(div) {
+            var movieId = div.getAttribute("data-movie-id");
+            if (movieId && window.__movieReviews && window.__movieReviews[movieId]) {
+              div.innerHTML = window.__movieReviews[movieId];
+            }
+          });
+          
+          html = clone.innerHTML;
 
           if (window.__openModal) {
             window.__openModal(html);
