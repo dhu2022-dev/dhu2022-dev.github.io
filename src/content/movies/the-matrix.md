@@ -13,5 +13,4 @@ tags:
 title: The Matrix
 year: 1999
 ---
-
-This movie fundamentally changed how I view the world. Be prepared for a mind boggling set of events that shake your perception of reality — literally. Neo is fcking badass with his character development that seems somehow relatable while also detached. Also trinity is what every CS major aspires to be. Epic fight scenes, deep dialogue of the world, and relatable growth that rivets the audience.
+This movie fundamentally changed how I view the world. Be prepared for a mind boggling set of events that shake your perception of reality — literally. Neo is fcking badass with his character development that seems somehow relatable while also detached. Also Trinity is what every CS major aspires to be. Epic fight scenes, deep dialogue of the world, and relatable growth that rivets the audience.
